@@ -19,7 +19,7 @@ echo "<settings><servers><server><id>$NEXUS_ID</id><username>$NEXUS_USER</userna
 
 echo "Deploying..."
 mvn deploy \
-    -Dgit.tag=$VERSION_TAG
+    -Dgit.tag=$VERSION_TAG \
     -D"shard.client.token=$DISCORD_TOKEN"
     # -Dmaven.wagon.http.ssl.insecure=true \
     # -Dmaven.wagon.http.ssl.allowall=true \
