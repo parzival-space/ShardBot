@@ -31,6 +31,9 @@ jobs:
           NEXUS_HOST: ${{ secrets.NEXUS_HOST }}
           NEXUS_USER: ${{ secrets.NEXUS_USER }}
           NEXUS_PASS: ${{ secrets.NEXUS_PASS }}
+
+          # Required for tests
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
           chmod +x ./.github/scripts/deploy.sh
           ./.github/scripts/deploy.sh
