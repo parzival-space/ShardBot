@@ -1,0 +1,41 @@
+name: Deploy Artifacts
+
+on:
+  push:
+    branches: 
+      - main
+      - develop
+      - main-fix/*
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: "."
+          clean: false
+
+      - name: Pre-Deploy
+        run: |
+          chmod +x ./.github/scripts/preDeploy.sh
+          ./.github/scripts/preDeploy.sh
+
+      - name: Deploy
+        env:
+          # Define Nexus Repository Credentials
+          NEXUS_ID: ${{ secrets.NEXUS_ID }}
+          NEXUS_HOST: ${{ secrets.NEXUS_HOST }}
+          NEXUS_USER: ${{ secrets.NEXUS_USER }}
+          NEXUS_PASS: ${{ secrets.NEXUS_PASS }}
+        run: |
+          chmod +x ./.github/scripts/deploy.sh
+          ./.github/scripts/deploy.sh
+
+      - name: Post-Deploy
+        run: |
+          chmod +x ./.github/scripts/postDeploy.sh
+          ./.github/scripts/postDeploy.sh
