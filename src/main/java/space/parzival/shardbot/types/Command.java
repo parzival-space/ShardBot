@@ -53,7 +53,7 @@ public class Command {
      */
     public void register(JDA client) {
         // register command
-        if (!client.retrieveCommands().complete().stream().anyMatch(c -> c.getName().equals(this.name))) {
+        if (client.retrieveCommands().complete().stream().noneMatch(c -> c.getName().equals(this.name))) {
             client.upsertCommand(this.toSlashCommandData()).queue();
         }
         
