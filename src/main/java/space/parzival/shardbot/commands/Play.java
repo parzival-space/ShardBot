@@ -10,15 +10,18 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import space.parzival.shardbot.exceptions.CommandExecutionException;
-import space.parzival.shardbot.handlers.AudioControl;
-import space.parzival.shardbot.handlers.TrackScheduler;
+import space.parzival.shardbot.music.AudioControl;
+import space.parzival.shardbot.music.TrackScheduler;
 import space.parzival.shardbot.types.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -46,29 +49,46 @@ public class Play extends Command {
     @Override
     public void execute(JDA client, SlashCommandInteractionEvent event, InteractionHook hook) throws CommandExecutionException {
 
-        String url = event.getOption("url").getAsString();
+        // read the options
+        OptionMapping url = event.getOption("url");
+
+        // fetch event data
         Member member = event.getMember();
         Guild guild = event.getGuild();
 
+        // make sure the option is specified
+        if (url == null || member == null || guild == null) return;
+
         // make sure the option data contains a valid url (regex magic)
-        if (!url.matches("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")) {
+        if (!url.getAsString().matches("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")) {
             hook.sendMessage(
                 "The URL you entered seems to be invalid."
             ).queue();
             return;
         }
-
+        
         // make sure command issuer is in a channel
-        if (member.getVoiceState() == null || !member.getVoiceState().inAudioChannel()) {
+        GuildVoiceState voiceState = member.getVoiceState();
+        if (voiceState == null || !voiceState.inAudioChannel()) {
             hook.sendMessage(
                 "It looks like you are not in a Voice Channel.\n" +
                 "You cant use this command if you are not in a Voice Channel."
             ).queue();
             return;
         }
+
+        // get audio channel
+        AudioChannel audioChannel = voiceState.getChannel();
+        if (audioChannel == null) {
+            hook.sendMessage(
+                "I can not access your Audio Channel.\n" +
+                "This is an internal error! Please contact the developer."
+            ).queue();
+            return;
+        }
         
         // connect to voice
-        VoiceChannel channel = guild.getVoiceChannelById(member.getVoiceState().getChannel().getIdLong());
+        VoiceChannel channel = guild.getVoiceChannelById(audioChannel.getIdLong());
         AudioManager audioManager = guild.getAudioManager();
         audioManager.openAudioConnection(channel);
 
@@ -76,49 +96,50 @@ public class Play extends Command {
 
         // resolve song
         AudioPlayerManager manager = this.audioController.getPlayerManager();
-        manager.loadItem(url, new AudioLoadResultHandler() {
+        manager.loadItem(url.getAsString(), new AudioLoadResultHandler() {
 
             @Override
-            public void loadFailed(FriendlyException arg0) { sendLoadFailed(event, arg0); }
-
-            @Override
-            public void noMatches() { sendNoMatches(event); }
-
-            @Override
-            public void playlistLoaded(AudioPlaylist arg0) {
-                arg0.getTracks().forEach(t -> doTrackLoad(event, t));
+            public void loadFailed(FriendlyException err) { 
+                // failed to load track
+                event.getHook().sendMessage(
+                    "Could not load your Track:\n" + err.getMessage()
+                ).queue();
             }
 
             @Override
-            public void trackLoaded(AudioTrack arg0) { doTrackLoad(event, arg0); }
+            public void noMatches() { 
+                // no valid track found
+                event.getHook().sendMessage(
+                    "Could not find Track"
+                ).queue();
+             }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist tracks) {
+                tracks.getTracks().forEach(this::trackLoaded);
+            }
+
+            @Override
+            public void trackLoaded(AudioTrack track) {
+                // set handler
+                AudioManager audioManager = guild.getAudioManager();
+                audioManager.setSendingHandler(audioController.getSendHandlerForGuild(event.getGuild()));
+
+                // add to track scheduler
+                TrackScheduler scheduler = audioController.getSchedulerForGuild(event.getGuild());
+                scheduler.setNotifyChannel(event.getChannel());
+                scheduler.queueTrack(track);
+
+                if (!scheduler.isPlaying()) audioController.getPlayerForGuild(event.getGuild()).playTrack(scheduler.getNextTrack());
+                
+                // no valid track found
+                event.getHook().sendMessage(
+                    "Added Track to the playlist."
+                ).queue();
+            }
             
         });
 
 
-    }
-
-
-    private void sendLoadFailed(SlashCommandInteractionEvent event, FriendlyException err) {
-        event.getHook().sendMessage(
-            "Could not load your Track:\n" + err.getMessage()
-        ).queue();
-    }
-    private void sendNoMatches(SlashCommandInteractionEvent event) {
-        event.getHook().sendMessage(
-            "Could not find Track"
-        ).queue();
-    }
-
-    private void doTrackLoad(SlashCommandInteractionEvent event, AudioTrack track) {
-        // set handler
-        AudioManager audioManager = event.getGuild().getAudioManager();
-        audioManager.setSendingHandler(audioController.getSendHandlerForGuild(event.getGuild()));
-
-        // add to track scheduler
-        TrackScheduler scheduler = audioController.getSchedulerForGuild(event.getGuild());
-        scheduler.setNotifyChannel(event.getChannel());
-        scheduler.queueTrack(track);
-
-        if (!scheduler.isPlaying()) audioController.getPlayerForGuild(event.getGuild()).playTrack(scheduler.getNextTrack());
     }
 }

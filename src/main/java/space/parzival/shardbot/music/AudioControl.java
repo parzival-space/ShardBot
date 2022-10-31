@@ -1,4 +1,4 @@
-package space.parzival.shardbot.handlers;
+package space.parzival.shardbot.music;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +27,10 @@ public class AudioControl {
         this.schedulerStore = new HashMap<>();
         this.sendHandlerStore = new HashMap<>();
 
-        AudioSourceManagers.registerRemoteSources(playerManager);
+        AudioSourceManagers.registerRemoteSources(playerManager); // TODO: implement bass-boost
         this.playerManager.getConfiguration().setFilterHotSwapEnabled(true);
         this.playerManager.getConfiguration().setOpusEncodingQuality(10); // set to max
+
     }
 
     /**
@@ -40,6 +41,9 @@ public class AudioControl {
     public AudioPlayer getPlayerForGuild(Guild guild) {
         if (!this.playerStore.containsKey(guild)) {
             AudioPlayer player = this.playerManager.createPlayer();
+
+            // default volume
+            player.setVolume(5);
 
             player.addListener(this.getSchedulerForGuild(guild));
             this.playerStore.put(guild, player);

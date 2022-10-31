@@ -1,8 +1,11 @@
-package space.parzival.shardbot.handlers;
+package space.parzival.shardbot.music;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.databind.ser.std.ToEmptyObjectSerializer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -23,15 +26,30 @@ public class TrackScheduler extends AudioEventAdapter {
     private boolean playing = false; // TODO: implement pause and stuff
 
     @Setter
-    private MessageChannelUnion notifyChannel = null;
+    /**
+     * Specifies the channel in wich the "Now playing..." messages will be send.
+     * If null then no messages will be send.
+     */
+    private @Nullable MessageChannelUnion notifyChannel = null;
 
 
+    /**
+     * Add a {@see Track} to the playlist.
+     * @param track The Track you want to add.
+     */
     public void queueTrack(AudioTrack track) {
         this.queue.add(track);
     }
 
-    public AudioTrack getNextTrack() {
-        return queue.get(0);
+    /**
+     * Return the next Track that is going to be played.
+     * @return null if nothing is in queue.
+     */
+    public @Nullable AudioTrack getNextTrack() {
+        if (this.queue.isEmpty()) 
+            return null;
+        else
+            return queue.get(0);
     }
 
 
@@ -53,14 +71,22 @@ public class TrackScheduler extends AudioEventAdapter {
         queue.remove(0);
         playing = true;
 
-        if (this.notifyChannel != null) this.notifyChannel.sendMessage("Now playing: " + track.getInfo().title).queue();
+        MessageChannelUnion messageChannel = this.notifyChannel;
+        if (messageChannel != null) messageChannel.sendMessage("Now playing: " + track.getInfo().title).queue();
     }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason.mayStartNext && !queue.isEmpty()) {
             player.playTrack(queue.get(0));
+            return;
         }
+
+        else if (endReason == AudioTrackEndReason.STOPPED) {
+            this.queue.clear();
+        }
+
+        // all songs have finished
         playing = false;
 
         // endReason == FINISHED: A track finished or died by an exception (mayStartNext

@@ -1,4 +1,4 @@
-package space.parzival.shardbot.handlers;
+package space.parzival.shardbot.music;
 
 import java.nio.ByteBuffer;
 
