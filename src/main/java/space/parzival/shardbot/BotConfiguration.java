@@ -34,19 +34,19 @@ public class BotConfiguration {
      * @return
      * @throws LoginException
      */
-    @Bean
-    public void launchDiscordService() throws LoginException {
+    @Bean(name = "Discord Service")
+    public void handleDiscordService() throws LoginException {
 
         JDA client = JDABuilder.createDefault(clientProperties.getToken())
                 .build();
 
-        // register commands
-        commands.stream().forEach(c -> c.register(client));
+        // remove previously registered commands
+        client.updateCommands().queue();
 
-        log.info("Found {} events", events.size());
-
-        // register event handlers
-        events.stream().forEach(client::addEventListener);
+        // register new commands & event handlers
+        commands.forEach(c -> c.register(client));
+        events.forEach(client::addEventListener);
+        log.info("Registered {} events and {} commands.", events.size(), commands.size());
 
     }
 

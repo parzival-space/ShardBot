@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 @Slf4j
 public class Command {
@@ -51,18 +52,17 @@ public class Command {
      * @param client The Client-Instance.
      */
     public void register(JDA client) {
-        log.info("Registered '{}' > {}", this.name, this.description);
-
         // register command
-        client.updateCommands().addCommands(
-            Commands.slash(this.name, this.description)
-                .addOptions(this.options)
-        ).queue();
+        
+        client.upsertCommand(this.toSlashCommandData()).queue();
 
         // listen for execution event
         client.addEventListener(new ListenerAdapter() {
             @Override
             public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
+                // check if the executed command is handled by this class
+                if (!event.getName().equals(name)) return;
+
                 // set the response to: 'thinking...'
                 event.deferReply().queue();
                 InteractionHook hook = event.getHook();
@@ -77,6 +77,8 @@ public class Command {
                 }
             }
         });
+        
+        log.debug("Registered new command '{}' with {} options.", this.name, this.options.size());
     }
     
     /**
@@ -87,5 +89,11 @@ public class Command {
      */
     public void execute(JDA client, SlashCommandInteractionEvent event, InteractionHook hook) throws Exception { //NOSONAR - intended
         // boilerplate code
+    }
+
+
+    public @Nonnull SlashCommandData toSlashCommandData() {
+        return Commands.slash(this.name, this.description)
+            .addOptions(this.options);
     }
 }
