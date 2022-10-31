@@ -11,6 +11,10 @@ public class AudioPlayerSendHandler implements AudioSendHandler {
     private final AudioPlayer audioPlayer;
     private AudioFrame lastFrame;
   
+    /**
+     * This class acts as a Man-In-The-Middle converter for LavaPlayer
+     * @param audioPlayer
+     */
     public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
       this.audioPlayer = audioPlayer;
     }

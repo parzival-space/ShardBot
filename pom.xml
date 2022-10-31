@@ -45,6 +45,14 @@
 			<groupId>com.github.walkyst</groupId>
 			<artifactId>lavaplayer-fork</artifactId>
 			<version>1.3.99.1</version>
+
+			<!-- this artifact hase some strange dependencies -->
+			<exclusions>
+				<exclusion>
+					<groupId>com.vaadin.external.google</groupId>
+					<artifactId>android-json</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -52,7 +60,10 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
+
+	
 
 	<build>
 		<plugins>
@@ -76,12 +87,6 @@
 		<repository>
 		    <id>jitpack.io</id>
 		    <url>https://jitpack.io</url>
-		</repository>
-		<!-- required by LavaPlayer -->
-		<repository>
-			<id>dv8tion</id>
-			<name>m2-dv8tion</name>
-			<url>https://m2.dv8tion.net/releases</url>
 		</repository>
 		
 		<repository>

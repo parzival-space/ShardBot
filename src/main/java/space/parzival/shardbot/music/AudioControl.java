@@ -22,6 +22,12 @@ public class AudioControl {
     @Getter
     private AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
+    /**
+     * Baiscally a in-memory Database that manages {@see AudioPlayer}s, {@see TrackScheduler}s 
+     * and {@see AudioPlayerSendHandler}s for multiple {@see Guild}s.
+     * <p>
+     * Multi-Guild-Bot lets gooo!!
+     */
     public AudioControl() {
         this.playerStore = new HashMap<>();
         this.schedulerStore = new HashMap<>();
@@ -31,6 +37,7 @@ public class AudioControl {
         this.playerManager.getConfiguration().setFilterHotSwapEnabled(true);
         this.playerManager.getConfiguration().setOpusEncodingQuality(10); // set to max
 
+        // TODO: implement YoutubeAudioSourceManager
     }
 
     /**
@@ -64,7 +71,7 @@ public class AudioControl {
 
     /**
      * Loads or registers a sound handler for the specific guild.
-     * @param guiled
+     * @param guild
      * @return
      */
     public AudioPlayerSendHandler getSendHandlerForGuild(Guild guild) {
