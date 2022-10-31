@@ -19,6 +19,7 @@ import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 @Slf4j
 public class TrackScheduler extends AudioEventAdapter {
 
+    @Getter
     private List<AudioTrack> queue = new ArrayList<>();
 
     @Getter
@@ -40,6 +41,11 @@ public class TrackScheduler extends AudioEventAdapter {
         this.queue.add(track);
     }
 
+
+    public void clearQueue() {
+        this.queue.clear();
+    }
+
     /**
      * Return the next Track that is going to be played.
      * @return null if nothing is in queue.
@@ -54,12 +60,14 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onPlayerPause(AudioPlayer player) {
-        // Player was paused
+        this.playing = false;
     }
 
     @Override
     public void onPlayerResume(AudioPlayer player) {
-        // Player was resumed
+        this.playing = true;
+        
+        log.info("Now playing '{}'", player.getPlayingTrack().getInfo().title);
     }
 
     @Override
@@ -76,13 +84,9 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (endReason.mayStartNext && !queue.isEmpty()) {
+        if ((endReason.mayStartNext || endReason == AudioTrackEndReason.STOPPED) && !queue.isEmpty()) {
             player.playTrack(queue.get(0));
             return;
-        }
-
-        else if (endReason == AudioTrackEndReason.STOPPED) {
-            this.queue.clear();
         }
 
         // all songs have finished
