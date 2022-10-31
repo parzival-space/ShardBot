@@ -116,11 +116,26 @@ public class Play extends Command {
 
             @Override
             public void playlistLoaded(AudioPlaylist tracks) {
-                tracks.getTracks().forEach(this::trackLoaded);
+                tracks.getTracks().forEach(this::loadTrack);
+                
+                // added track
+                event.getHook().sendMessage(
+                    "Added Playlist to the queue."
+                ).queue();
             }
 
             @Override
             public void trackLoaded(AudioTrack track) {
+                this.loadTrack(track);
+                
+                // added track
+                event.getHook().sendMessage(
+                    "Added Track to the queue."
+                ).queue();
+            }
+
+            private void loadTrack(AudioTrack track) {
+                
                 // set handler
                 AudioManager audioManager = guild.getAudioManager();
                 audioManager.setSendingHandler(audioController.getSendHandlerForGuild(event.getGuild()));
@@ -131,11 +146,6 @@ public class Play extends Command {
                 scheduler.queueTrack(track);
 
                 if (!scheduler.isPlaying()) audioController.getPlayerForGuild(event.getGuild()).playTrack(scheduler.getNextTrack());
-                
-                // no valid track found
-                event.getHook().sendMessage(
-                    "Added Track to the playlist."
-                ).queue();
             }
             
         });
