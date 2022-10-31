@@ -78,7 +78,7 @@ public class Skip extends Command {
         if (amount > queue.size()) amount = scheduler.getQueue().size();
 
         // skips songs
-        for (int i = 0; i < amount; i++) {
+        for (int i = 1; i < amount; i++) {
             queue.remove(0); //NOSONAR - intended
         }
 
