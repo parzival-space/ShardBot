@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import space.parzival.shardbot.properties.ClientProperties;
 import space.parzival.shardbot.types.Command;
 import space.parzival.shardbot.types.EventListener;
+import space.parzival.shardbot.utils.Commands;
 
 @Slf4j
 @Configuration
@@ -41,10 +42,9 @@ public class BotConfiguration {
                 .build();
 
         // remove previously registered commands
-        client.updateCommands().queue();
+        Commands.registerCommands(commands, client);
 
         // register new commands & event handlers
-        commands.forEach(c -> c.register(client));
         events.forEach(client::addEventListener);
         log.info("Registered {} events and {} commands.", events.size(), commands.size());
 
