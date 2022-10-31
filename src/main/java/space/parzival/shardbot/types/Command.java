@@ -53,8 +53,10 @@ public class Command {
      */
     public void register(JDA client) {
         // register command
+        if (!client.retrieveCommands().complete().stream().anyMatch(c -> c.getName().equals(this.name))) {
+            client.upsertCommand(this.toSlashCommandData()).queue();
+        }
         
-        client.upsertCommand(this.toSlashCommandData()).queue();
 
         // listen for execution event
         client.addEventListener(new ListenerAdapter() {
