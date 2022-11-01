@@ -1,6 +1,6 @@
 package space.parzival.shardbot.commands;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import space.parzival.shardbot.exceptions.CommandExecutionException;
 import space.parzival.shardbot.types.Command;
 
-@Service
+@Component
 public class Ping extends Command {
     
     public Ping() {

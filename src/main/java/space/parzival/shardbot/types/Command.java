@@ -51,13 +51,7 @@ public class Command {
      * Registers the command to the specified {@see JDA}-Bot instance.
      * @param client The Client-Instance.
      */
-    public void register(JDA client) {
-        // register command
-        if (client.retrieveCommands().complete().stream().noneMatch(c -> c.getName().equals(this.name))) {
-            client.upsertCommand(this.toSlashCommandData()).queue();
-        }
-        
-
+    public void registerCommandListener(JDA client) {
         // listen for execution event
         client.addEventListener(new ListenerAdapter() {
             @Override

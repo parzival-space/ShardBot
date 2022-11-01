@@ -1,9 +1,10 @@
-package space.parzival.shardbot.commands;
+package space.parzival.shardbot.commands.music;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -26,7 +27,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-@Service
+@Component
 public class Play extends Command {
 
     @Autowired
@@ -57,7 +58,15 @@ public class Play extends Command {
         Guild guild = event.getGuild();
 
         // make sure the option is specified
-        if (url == null || member == null || guild == null) return;
+        if (url == null) return;
+
+        // is this actually run in a guild?
+        if (member == null || guild == null) {
+            hook.sendMessage(
+                "Sorry, this command only works in a server."
+            ).queue();
+            return;
+        }
 
         // make sure the option data contains a valid url (regex magic)
         if (!url.getAsString().matches("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")) {
@@ -142,10 +151,11 @@ public class Play extends Command {
 
                 // add to track scheduler
                 TrackScheduler scheduler = audioController.getSchedulerForGuild(event.getGuild());
+                AudioPlayer player = audioController.getPlayerForGuild(event.getGuild());
                 scheduler.setNotifyChannel(event.getChannel());
                 scheduler.queueTrack(track);
 
-                if (!scheduler.isPlaying()) audioController.getPlayerForGuild(event.getGuild()).playTrack(scheduler.getNextTrack());
+                if (!scheduler.isPlaying() && !player.isPaused()) player.playTrack(scheduler.getNextTrack());
             }
             
         });
