@@ -26,7 +26,7 @@ public class Bassboost extends Command {
     public Bassboost() {
         super();
         super.name = "bassboost";
-        super.description = "Enables/Disables the bass boost.";
+        super.description = "Enables/Disables the Bass-Boost.";
 
         // required for every command => override execute function
         super.executingInstance = this;
