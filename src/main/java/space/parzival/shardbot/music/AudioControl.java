@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -15,9 +16,10 @@ import net.dv8tion.jda.api.entities.Guild;
 
 @Service
 public class AudioControl {
-    private Map<Guild, AudioPlayer> playerStore;
-    private Map<Guild, TrackScheduler> schedulerStore;
-    private Map<Guild, AudioPlayerSendHandler> sendHandlerStore;
+    private Map<Guild, AudioPlayer> playerStore = new HashMap<>();
+    private Map<Guild, TrackScheduler> schedulerStore = new HashMap<>();
+    private Map<Guild, AudioPlayerSendHandler> sendHandlerStore = new HashMap<>();
+    private Map<Guild, EqualizerFactory> equalizerStore = new HashMap<>();
 
     @Getter
     private AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
@@ -29,11 +31,8 @@ public class AudioControl {
      * Multi-Guild-Bot lets gooo!!
      */
     public AudioControl() {
-        this.playerStore = new HashMap<>();
-        this.schedulerStore = new HashMap<>();
-        this.sendHandlerStore = new HashMap<>();
-
         AudioSourceManagers.registerRemoteSources(playerManager); // TODO: implement bass-boost
+
         this.playerManager.getConfiguration().setFilterHotSwapEnabled(true);
         this.playerManager.getConfiguration().setOpusEncodingQuality(10); // set to max
 
@@ -81,5 +80,26 @@ public class AudioControl {
         }
 
         return this.sendHandlerStore.get(guild);
+    }
+
+    /**
+     * Loads or regusters the equalizer settings of a guild.
+     * @param guild
+     * @return
+     */
+    public EqualizerFactory getEqualizerForGuild(Guild guild) {
+        if (!this.equalizerStore.containsKey(guild)) {
+            EqualizerFactory equalizer = new EqualizerFactory();
+
+            AudioPlayer player = this.getPlayerForGuild(guild);
+            player.setFilterFactory(equalizer);
+            player.setFrameBufferDuration(500); // prevent equalizer taking time to take effect
+
+            // TODO: load last set filter from database or seomthing like that
+
+            this.equalizerStore.put(guild, equalizer);
+        }
+
+        return this.equalizerStore.get(guild);
     }
 }
