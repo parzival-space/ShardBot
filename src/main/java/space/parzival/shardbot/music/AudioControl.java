@@ -50,7 +50,7 @@ public class AudioControl {
             AudioPlayer player = this.playerManager.createPlayer();
 
             // default volume
-            player.setVolume(5);
+            player.setVolume(8);
 
             player.addListener(this.getSchedulerForGuild(guild));
             this.playerStore.put(guild, player);

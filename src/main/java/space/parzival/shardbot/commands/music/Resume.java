@@ -1,7 +1,7 @@
 package space.parzival.shardbot.commands.music;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
@@ -15,7 +15,7 @@ import space.parzival.shardbot.music.AudioControl;
 import space.parzival.shardbot.music.TrackScheduler;
 import space.parzival.shardbot.types.Command;
 
-@Service
+@Component
 public class Resume extends Command {
 
     @Autowired
