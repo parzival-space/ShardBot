@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -16,6 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import space.parzival.shardbot.exceptions.CommandExecutionException;
 import space.parzival.shardbot.music.AudioControl;
 import space.parzival.shardbot.types.Command;
+import space.parzival.shardbot.types.RichEmbedBuilder;
 
 @Component
 public class Bassboost extends Command {
@@ -43,8 +45,8 @@ public class Bassboost extends Command {
         
         // is this actually run in a guild?
         if (member == null || guild == null) {
-            hook.sendMessage(
-                "Sorry, this command only works in a server."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("Sorry, this command only works in a server.").build()
             ).queue();
             return;
         }
@@ -69,7 +71,12 @@ public class Bassboost extends Command {
             equalizer.setGain(i, BASS_BOOST[i] * multiplier);
         }
 
-        hook.sendMessage("Setting Bass-Boost to " + amount + "%...").queue();
+        MessageEmbed message = new RichEmbedBuilder()
+            .setTitle("Bass-Boost set to " + amount + "%.")
+            .setDescription("It may take a while to apply this.")
+            .build();
+
+        hook.sendMessageEmbeds(message).queue();
     }
 
     // bass boost pattern

@@ -14,7 +14,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import space.parzival.shardbot.types.RichEmbedBuilder;
 
 @Slf4j
 public class TrackScheduler extends AudioEventAdapter {
@@ -79,7 +81,16 @@ public class TrackScheduler extends AudioEventAdapter {
         playing = true;
 
         MessageChannelUnion messageChannel = this.notifyChannel;
-        if (messageChannel != null) messageChannel.sendMessage("Now playing: " + track.getInfo().title).queue();
+        if (messageChannel != null) {
+            MessageEmbed message = new RichEmbedBuilder()
+                .setAuthor("Now playing...", null, null, null)
+                .setTitle(track.getInfo().title)
+                .setDescription(track.getInfo().author)
+                .setUrl(track.getInfo().uri)
+                .build();
+
+            messageChannel.sendMessageEmbeds(message).queue();
+        }
     }
 
     @Override

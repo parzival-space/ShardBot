@@ -14,6 +14,7 @@ import space.parzival.shardbot.exceptions.CommandExecutionException;
 import space.parzival.shardbot.music.AudioControl;
 import space.parzival.shardbot.music.TrackScheduler;
 import space.parzival.shardbot.types.Command;
+import space.parzival.shardbot.types.RichEmbedBuilder;
 
 @Component
 public class Stop extends Command {
@@ -39,8 +40,8 @@ public class Stop extends Command {
         
         // is this actually run in a guild?
         if (member == null || guild == null) {
-            hook.sendMessage(
-                "Sorry, this command only works in a server."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("Sorry, this command only works in a server.").build()
             ).queue();
             return;
         }
@@ -50,16 +51,17 @@ public class Stop extends Command {
         AudioPlayer player = this.audioController.getPlayerForGuild(guild);
 
         if (scheduler.getNextTrack() == null && !scheduler.isPlaying()) {
-            hook.sendMessage(
-                "There is nothing that can be stopped or the current playback is already stopped."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("There is nothing that can be stopped or the current playback is already stopped.").build()
             ).queue();
             return;
         }
 
         scheduler.clearQueue();
         player.stopTrack();
-        hook.sendMessage(
-            "Okay, I stopped the current playback."
+
+        hook.sendMessageEmbeds(
+            RichEmbedBuilder.simple("Okay, I stopped the current playback.").build()
         ).queue();
     }
 }
