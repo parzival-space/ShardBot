@@ -89,7 +89,7 @@ public class TrackScheduler extends AudioEventAdapter {
                 .setUrl(track.getInfo().uri)
                 .build();
 
-            messageChannel.sendMessageEmbeds(message);
+            messageChannel.sendMessageEmbeds(message).queue();
         }
     }
 
