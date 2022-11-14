@@ -22,6 +22,7 @@ import space.parzival.shardbot.exceptions.CommandExecutionException;
 import space.parzival.shardbot.music.AudioControl;
 import space.parzival.shardbot.music.TrackScheduler;
 import space.parzival.shardbot.types.Command;
+import space.parzival.shardbot.types.RichEmbedBuilder;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -110,16 +111,16 @@ public class Play extends Command {
             @Override
             public void loadFailed(FriendlyException err) { 
                 // failed to load track
-                event.getHook().sendMessage(
-                    "Could not load your Track:\n" + err.getMessage()
+                hook.sendMessageEmbeds(
+                    RichEmbedBuilder.simple("Could not load your Track:").setDescription(err.getMessage()).build()
                 ).queue();
             }
 
             @Override
             public void noMatches() { 
                 // no valid track found
-                event.getHook().sendMessage(
-                    "Could not find Track"
+                hook.sendMessageEmbeds(
+                    RichEmbedBuilder.simple("Could not find Track").build()
                 ).queue();
              }
 
@@ -128,8 +129,8 @@ public class Play extends Command {
                 tracks.getTracks().forEach(this::loadTrack);
                 
                 // added track
-                event.getHook().sendMessage(
-                    "Added Playlist to the queue."
+                hook.sendMessageEmbeds(
+                    RichEmbedBuilder.simple("Added Playlist to the queue.").build()
                 ).queue();
             }
 
@@ -138,8 +139,8 @@ public class Play extends Command {
                 this.loadTrack(track);
                 
                 // added track
-                event.getHook().sendMessage(
-                    "Added Track to the queue."
+                hook.sendMessageEmbeds(
+                    RichEmbedBuilder.simple("Added Track to the queue.").build()
                 ).queue();
             }
 

@@ -17,6 +17,7 @@ import space.parzival.shardbot.exceptions.CommandExecutionException;
 import space.parzival.shardbot.music.AudioControl;
 import space.parzival.shardbot.music.TrackScheduler;
 import space.parzival.shardbot.types.Command;
+import space.parzival.shardbot.types.RichEmbedBuilder;
 
 @Component
 public class Skip extends Command {
@@ -44,8 +45,8 @@ public class Skip extends Command {
         
         // is this actually run in a guild?
         if (member == null || guild == null) {
-            hook.sendMessage(
-                "Sorry, this command only works in a server."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("Sorry, this command only works in a server.").build()
             ).queue();
             return;
         }
@@ -56,8 +57,8 @@ public class Skip extends Command {
         if (amountOption != null) amount = amountOption.getAsInt();
 
         if (amount < 1) {
-            hook.sendMessage(
-                "Sorry, I cannot travel back in time."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("Values less than 1 are not valid!").build()
             ).queue();
             return;
         }
@@ -67,8 +68,8 @@ public class Skip extends Command {
         AudioPlayer player = this.audioController.getPlayerForGuild(guild);
 
         if (scheduler.getNextTrack() == null && !scheduler.isPlaying()) {
-            hook.sendMessage(
-                "There is nothing that can be stopped or the current playback is already stopped."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("There is nothing that can be stopped or the current playback is already stopped.").build()
             ).queue();
             return;
         }
@@ -83,8 +84,8 @@ public class Skip extends Command {
         }
 
         player.stopTrack();
-        hook.sendMessage(
-            "Okay, I skipped " + amount + " tracks."
+        hook.sendMessageEmbeds(
+            RichEmbedBuilder.simple("Okay, I skipped " + amount + " tracks.").build()
         ).queue();
     }
 }

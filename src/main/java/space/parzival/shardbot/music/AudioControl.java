@@ -31,7 +31,7 @@ public class AudioControl {
      * Multi-Guild-Bot lets gooo!!
      */
     public AudioControl() {
-        AudioSourceManagers.registerRemoteSources(playerManager); // TODO: implement bass-boost
+        AudioSourceManagers.registerRemoteSources(playerManager);
 
         this.playerManager.getConfiguration().setFilterHotSwapEnabled(true);
         this.playerManager.getConfiguration().setOpusEncodingQuality(10); // set to max

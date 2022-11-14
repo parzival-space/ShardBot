@@ -14,6 +14,7 @@ import space.parzival.shardbot.exceptions.CommandExecutionException;
 import space.parzival.shardbot.music.AudioControl;
 import space.parzival.shardbot.music.TrackScheduler;
 import space.parzival.shardbot.types.Command;
+import space.parzival.shardbot.types.RichEmbedBuilder;
 
 @Component
 public class Resume extends Command {
@@ -39,8 +40,8 @@ public class Resume extends Command {
         
         // is this actually run in a guild?
         if (member == null || guild == null) {
-            hook.sendMessage(
-                "Sorry, this command only works in a server."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("Sorry, this command only works in a server.").build()
             ).queue();
             return;
         }
@@ -50,15 +51,15 @@ public class Resume extends Command {
         AudioPlayer player = this.audioController.getPlayerForGuild(guild);
 
         if (scheduler.isPlaying() || !player.isPaused()) {
-            hook.sendMessage(
-                "There is nothing that can be resumed or the current playback is not paused."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("There is nothing that can be resumed or the current playback is not paused.").build()
             ).queue();
             return;
         }
 
         player.setPaused(false);
-        hook.sendMessage(
-            "Okay, I resume the current playback."
+        hook.sendMessageEmbeds(
+            RichEmbedBuilder.simple("Okay, I resume the current playback.").build()
         ).queue();
     }
 }

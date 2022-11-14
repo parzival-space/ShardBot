@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import lombok.Builder;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.entities.EmbedType;
@@ -19,7 +17,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed.Footer;
 import net.dv8tion.jda.api.entities.MessageEmbed.ImageInfo;
 import net.dv8tion.jda.api.entities.MessageEmbed.Provider;
 import net.dv8tion.jda.api.entities.MessageEmbed.Thumbnail;
-import net.dv8tion.jda.api.entities.MessageEmbed.VideoInfo;
 
 @Accessors(chain = true)
 @Setter
@@ -71,10 +68,16 @@ public class RichEmbedBuilder {
     }
 
 
-    public @Nonnull MessageEmbed toMessageEmbed() {
+    public @Nonnull MessageEmbed build() {
         return new MessageEmbed(
             this.url, this.title, this.description, EmbedType.RICH, 
             this.timestamp, this.color, this.thumbnail, this.siteProvider, 
             this.author, null, this.footer, this.image, this.fields);
+    }
+
+
+    public static RichEmbedBuilder simple(String message) {
+        return new RichEmbedBuilder()
+            .setTitle(message);
     }
 }

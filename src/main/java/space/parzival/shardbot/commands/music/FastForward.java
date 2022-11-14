@@ -18,6 +18,7 @@ import space.parzival.shardbot.exceptions.CommandExecutionException;
 import space.parzival.shardbot.music.AudioControl;
 import space.parzival.shardbot.music.TrackScheduler;
 import space.parzival.shardbot.types.Command;
+import space.parzival.shardbot.types.RichEmbedBuilder;
 
 @Component
 public class FastForward extends Command {
@@ -45,8 +46,8 @@ public class FastForward extends Command {
         
         // is this actually run in a guild?
         if (member == null || guild == null) {
-            hook.sendMessage(
-                "Sorry, this command only works in a server."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("Sorry, this command only works in a server.").build()
             ).queue();
             return;
         }
@@ -56,8 +57,8 @@ public class FastForward extends Command {
         AudioPlayer player = this.audioController.getPlayerForGuild(guild);
 
         if (!scheduler.isPlaying() || player.isPaused()) {
-            hook.sendMessage(
-                "There is nothing that can be fast forwarded or the current playback is already paused."
+            hook.sendMessageEmbeds(
+                RichEmbedBuilder.simple("There is nothing that can be fast forwarded or the current playback is already paused.").build()
             ).queue();
             return;
         }
@@ -78,6 +79,8 @@ public class FastForward extends Command {
             currentTrack.setPosition(currentTrack.getPosition() + timing);
         }
 
-        hook.sendMessage("Modified the current playback position by " + timing / 1000 + " seconds.").queue();;
+        hook.sendMessageEmbeds(
+            RichEmbedBuilder.simple("Playback has been fast-forwarded by " + timing / 1000 + " seconds.").build()
+        ).queue();;
     }
 }
