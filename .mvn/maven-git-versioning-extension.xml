@@ -1,0 +1,27 @@
+<gitVersioning>
+
+  <tag>
+    <pattern><![CDATA[(?<tagVersion>.+)]]></pattern>
+    <versionFormat>${tagVersion}</versionFormat>
+  </tag>
+
+  <branch>
+    <pattern>.*develop</pattern>
+    <versionFormat>develop-SNAPSHOT</versionFormat>
+  </branch>
+
+  <branch>
+    <pattern><![CDATA[.*feature/(?<feature>.+)]]></pattern>
+    <versionFormat>${feature}-SNAPSHOT</versionFormat>
+  </branch>
+
+  <branch>
+    <pattern><![CDATA[.*fix/(?<fixVersion>.+)]]></pattern>
+    <versionFormat>${fixVersion}-fix-SNAPSHOT</versionFormat>
+  </branch>
+
+  <commit>
+    <versionFormat>${commit.short}-SNAPSHOT</versionFormat>
+  </commit>
+
+</gitVersioning>
