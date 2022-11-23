@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -16,6 +17,7 @@ import space.parzival.shardbot.utils.Commands;
 
 @Slf4j
 @Configuration
+@Profile("!test")
 public class BotConfiguration implements InitializingBean {
     
     @Autowired
