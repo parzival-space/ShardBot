@@ -29,6 +29,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>com.github.DV8FromTheWorld</groupId>
 			<artifactId>JDA</artifactId>
 			<version>v5-personal_6</version>
