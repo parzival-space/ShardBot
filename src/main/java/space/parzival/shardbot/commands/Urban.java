@@ -55,7 +55,7 @@ public class Urban extends Command {
         // send message
         MessageEmbed message = new RichEmbedBuilder()
             .setTitle(definitions.get(0).getWord())
-            .setDescription(definitions.get(0).getDefinition())
+            .setDescription(makeSentenceableString(definitions.get(0).getDefinition()))
             .setUrl(definitions.get(0).getPermalink())
             .addField("Example", definitions.get(0).getExample(), false)
             .setFooter("Definition provided by Urban Dictionary", null, null)
@@ -63,5 +63,19 @@ public class Urban extends Command {
             .build();
 
         hook.sendMessageEmbeds(message).queue();
+    }
+
+    /**
+     * Formats string a little more readable.
+     */
+    private String makeSentenceableString(String original) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(original.substring(0, 1).toUpperCase());
+        builder.append(original.substring(1));
+
+        if (!original.endsWith(".")) builder.append(".");
+
+        return builder.toString();
     }
 }
