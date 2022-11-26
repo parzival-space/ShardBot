@@ -1,4 +1,4 @@
-package space.parzival.shardbot.music;
+package space.parzival.shardbot.modules.music;
 
 import java.util.ArrayList;
 import java.util.List;

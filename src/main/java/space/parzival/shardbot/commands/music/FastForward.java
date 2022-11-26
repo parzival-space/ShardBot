@@ -15,8 +15,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import space.parzival.shardbot.exceptions.CommandExecutionException;
-import space.parzival.shardbot.music.AudioControl;
-import space.parzival.shardbot.music.TrackScheduler;
+import space.parzival.shardbot.modules.music.AudioControl;
+import space.parzival.shardbot.modules.music.TrackScheduler;
 import space.parzival.shardbot.types.Command;
 import space.parzival.shardbot.types.RichEmbedBuilder;
 
