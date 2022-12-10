@@ -12,16 +12,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import space.parzival.shardbot.modules.urban.model.BaseResponse;
-import space.parzival.shardbot.modules.urban.model.Definition;
+import space.parzival.shardbot.modules.urban.model.DefinitionData;
 import space.parzival.shardbot.properties.HttpProperties;
 
 @Service
 public class UrbanDictionary {
 
     private RestTemplate restTemplate;
-    private final String apiBase = "https://api.urbandictionary.com/v0";
+    private static String apiBase = "https://api.urbandictionary.com/v0";
 
-    private UrbanDictionary(HttpProperties httpProperties) {
+    public UrbanDictionary(HttpProperties httpProperties) {
         // prepare template
         this.restTemplate = new RestTemplateBuilder()
             .setConnectTimeout(Duration.ofSeconds(httpProperties.getRequestTimeout()))
@@ -32,14 +32,18 @@ public class UrbanDictionary {
     }
 
 
-    public List<Definition> getDefinitions(String word) {
-        ResponseEntity<BaseResponse> response = this.restTemplate.getForEntity(this.apiBase + "/define?term=" + word, BaseResponse.class);
+    public List<DefinitionData> getDefinitions(String word) {
+        ResponseEntity<BaseResponse> response = this.restTemplate.getForEntity(apiBase + "/define?term=" + word, BaseResponse.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            return response.getBody().getList();
+            BaseResponse repsonseBody = response.getBody();
+
+            if (repsonseBody == null) return new ArrayList<>();
+
+            return repsonseBody.getList();
         }
         
-        return new ArrayList<Definition>();
+        return new ArrayList<>();
     }
     
 }

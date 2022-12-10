@@ -14,10 +14,10 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import space.parzival.shardbot.exceptions.CommandExecutionException;
+import space.parzival.discord.shared.base.exceptions.CommandExecutionException;
 import space.parzival.shardbot.modules.music.AudioControl;
-import space.parzival.shardbot.types.Command;
-import space.parzival.shardbot.types.RichEmbedBuilder;
+import space.parzival.discord.shared.base.types.Command;
+import space.parzival.discord.shared.base.types.RichEmbedBuilder;
 
 @Component
 public class Bassboost extends Command {
@@ -26,12 +26,7 @@ public class Bassboost extends Command {
     private AudioControl audioController;
     
     public Bassboost() {
-        super();
-        super.name = "bassboost";
-        super.description = "Enables/Disables the Bass-Boost.";
-
-        // required for every command => override execute function
-        super.executingInstance = this;
+        super("bassboost", "Enables/Disables the Bass-Boost.");
 
         super.options.add(new OptionData(OptionType.INTEGER, "percent", "The Bass-Boost amount in percent.", true));
     }

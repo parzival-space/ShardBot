@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter @Setter
 public class BaseResponse {
     
-    private List<Definition> list;
+    private List<DefinitionData> list;
 }

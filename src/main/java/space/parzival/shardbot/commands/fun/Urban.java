@@ -1,4 +1,4 @@
-package space.parzival.shardbot.commands;
+package space.parzival.shardbot.commands.fun;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import space.parzival.shardbot.exceptions.CommandExecutionException;
+import space.parzival.discord.shared.base.exceptions.CommandExecutionException;
 import space.parzival.shardbot.modules.urban.UrbanDictionary;
-import space.parzival.shardbot.modules.urban.model.Definition;
-import space.parzival.shardbot.types.Command;
-import space.parzival.shardbot.types.RichEmbedBuilder;
+import space.parzival.shardbot.modules.urban.model.DefinitionData;
+import space.parzival.discord.shared.base.types.Command;
+import space.parzival.discord.shared.base.types.RichEmbedBuilder;
 
 @Component
 public class Urban extends Command {
@@ -24,14 +24,9 @@ public class Urban extends Command {
     private UrbanDictionary dictionary;
     
     public Urban() {
-        super();
-        super.name = "urban";
-        super.description = "Search for word definitions using Urban Dictionary.";
+        super("urban", "Search for word definitions using Urban Dictionary.");
 
         super.options.add(new OptionData(OptionType.STRING, "search", "The term you want to search.", true));
-
-        // required for every command => override execute function
-        super.executingInstance = this;
     }
 
 
@@ -43,7 +38,7 @@ public class Urban extends Command {
         String term = event.getOption("search").getAsString();
 
         // search for definitions
-        List<Definition> definitions = this.dictionary.getDefinitions(term);
+        List<DefinitionData> definitions = this.dictionary.getDefinitions(term);
 
         if (definitions.isEmpty()) {
             hook.sendMessageEmbeds(

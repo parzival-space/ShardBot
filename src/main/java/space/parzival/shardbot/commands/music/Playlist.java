@@ -10,10 +10,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import space.parzival.shardbot.exceptions.CommandExecutionException;
+import space.parzival.discord.shared.base.exceptions.CommandExecutionException;
 import space.parzival.shardbot.modules.music.AudioControl;
 import space.parzival.shardbot.modules.music.TrackScheduler;
-import space.parzival.shardbot.types.Command;
+import space.parzival.discord.shared.base.types.Command;
 
 @Component
 public class Playlist extends Command {
@@ -22,12 +22,7 @@ public class Playlist extends Command {
     private AudioControl audioController;
     
     public Playlist() {
-        super();
-        super.name = "playlist";
-        super.description = "Displays the current song queue.";
-
-        // required for every command => override execute function
-        super.executingInstance = this;
+        super("playlist", "Displays the current song queue.");
     }
 
 

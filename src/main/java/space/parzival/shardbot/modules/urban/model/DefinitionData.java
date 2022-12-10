@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.Getter;
 
 @Getter @Setter
-public class Definition {
+public class DefinitionData {
 
     /**
      * The definition of the word.
