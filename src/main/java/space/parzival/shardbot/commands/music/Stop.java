@@ -10,11 +10,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import space.parzival.shardbot.exceptions.CommandExecutionException;
-import space.parzival.shardbot.music.AudioControl;
-import space.parzival.shardbot.music.TrackScheduler;
-import space.parzival.shardbot.types.Command;
-import space.parzival.shardbot.types.RichEmbedBuilder;
+import space.parzival.discord.shared.base.exceptions.CommandExecutionException;
+import space.parzival.shardbot.modules.music.AudioControl;
+import space.parzival.shardbot.modules.music.TrackScheduler;
+import space.parzival.discord.shared.base.types.Command;
+import space.parzival.discord.shared.base.types.RichEmbedBuilder;
 
 @Component
 public class Stop extends Command {
@@ -23,12 +23,7 @@ public class Stop extends Command {
     private AudioControl audioController;
     
     public Stop() {
-        super();
-        super.name = "stop";
-        super.description = "Stops the current playback and clears the playlist.";
-
-        // required for every command => override execute function
-        super.executingInstance = this;
+        super("stop", "Stops the current playback and clears the playlist.");
     }
 
 

@@ -10,11 +10,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import space.parzival.shardbot.exceptions.CommandExecutionException;
-import space.parzival.shardbot.music.AudioControl;
-import space.parzival.shardbot.music.TrackScheduler;
-import space.parzival.shardbot.types.Command;
-import space.parzival.shardbot.types.RichEmbedBuilder;
+import space.parzival.discord.shared.base.exceptions.CommandExecutionException;
+import space.parzival.shardbot.modules.music.AudioControl;
+import space.parzival.shardbot.modules.music.TrackScheduler;
+import space.parzival.discord.shared.base.types.Command;
+import space.parzival.discord.shared.base.types.RichEmbedBuilder;
 
 @Component
 public class Resume extends Command {
@@ -23,12 +23,7 @@ public class Resume extends Command {
     private AudioControl audioController;
     
     public Resume() {
-        super();
-        super.name = "resume";
-        super.description = "Resumes the current playback.";
-
-        // required for every command => override execute function
-        super.executingInstance = this;
+        super("resume", "Resumes the current playback.");
     }
 
 

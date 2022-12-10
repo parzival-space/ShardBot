@@ -11,9 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import space.parzival.shardbot.properties.ClientProperties;
-import space.parzival.shardbot.types.Command;
-import space.parzival.shardbot.types.EventListener;
-import space.parzival.shardbot.utils.Commands;
+import space.parzival.discord.shared.base.types.Command;
+import space.parzival.discord.shared.base.types.EventListener;
+import space.parzival.discord.shared.base.utils.Commands;
 
 @Slf4j
 @Configuration

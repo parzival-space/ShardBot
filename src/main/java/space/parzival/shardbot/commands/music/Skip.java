@@ -13,11 +13,11 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import space.parzival.shardbot.exceptions.CommandExecutionException;
-import space.parzival.shardbot.music.AudioControl;
-import space.parzival.shardbot.music.TrackScheduler;
-import space.parzival.shardbot.types.Command;
-import space.parzival.shardbot.types.RichEmbedBuilder;
+import space.parzival.discord.shared.base.exceptions.CommandExecutionException;
+import space.parzival.shardbot.modules.music.AudioControl;
+import space.parzival.shardbot.modules.music.TrackScheduler;
+import space.parzival.discord.shared.base.types.Command;
+import space.parzival.discord.shared.base.types.RichEmbedBuilder;
 
 @Component
 public class Skip extends Command {
@@ -26,14 +26,9 @@ public class Skip extends Command {
     private AudioControl audioController;
     
     public Skip() {
-        super();
-        super.name = "skip";
-        super.description = "Skips the current playback.";
+        super("skip", "Skips the current playback.");
 
         super.options.add(new OptionData(OptionType.INTEGER, "amount", "The number of songs you want to skip."));
-
-        // required for every command => override execute function
-        super.executingInstance = this;
     }
 
 

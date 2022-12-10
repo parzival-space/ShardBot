@@ -18,11 +18,11 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import space.parzival.shardbot.exceptions.CommandExecutionException;
-import space.parzival.shardbot.music.AudioControl;
-import space.parzival.shardbot.music.TrackScheduler;
-import space.parzival.shardbot.types.Command;
-import space.parzival.shardbot.types.RichEmbedBuilder;
+import space.parzival.discord.shared.base.exceptions.CommandExecutionException;
+import space.parzival.shardbot.modules.music.AudioControl;
+import space.parzival.shardbot.modules.music.TrackScheduler;
+import space.parzival.discord.shared.base.types.Command;
+import space.parzival.discord.shared.base.types.RichEmbedBuilder;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -35,16 +35,11 @@ public class Play extends Command {
     private AudioControl audioController;
     
     public Play() {
-        super();
-        super.name = "play";
-        super.description = "Plays a YouTube Video or a Song";
+        super("play", "Plays a YouTube Video or a Song");
 
         super.options.add(
             new OptionData(OptionType.STRING, "url", "The remote resource to play.", true)
         );
-
-        // required for every command => override execute function
-        super.executingInstance = this;
     }
 
 
