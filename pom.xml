@@ -19,7 +19,7 @@
 	<url>https://github.com/parzival-space/shardbot/</url>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 	</properties>
 
 	<dependencies>
@@ -65,6 +65,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+<dependency>
+  <groupId>space.parzival.discord.shared</groupId>
+  <artifactId>base</artifactId>
+  <version>develop-20221210.000301-3</version>
+</dependency>
 		
 	</dependencies>
 
@@ -88,26 +93,26 @@
 	</build>
 
 	<repositories>
+		<repository>
+			<id>parzival.space</id>
+			<url>https://nexus.parzival.space/repository/maven-public/</url>
+		</repository>
+
 		<!-- required by JDA -->
 		<repository>
 		    <id>jitpack.io</id>
 		    <url>https://jitpack.io</url>
-		</repository>
-		
-		<repository>
-			<id>parzival.space</id>
-			<url>http://nexus.parzival.space/repository/maven-releases/</url>
 		</repository>
 	</repositories>
 
 	<distributionManagement>
 		<repository>
 			<id>parzival.space</id>
-			<url>http://nexus.parzival.space/repository/maven-releases/</url>
+			<url>https://nexus.parzival.space/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>parzival.space</id>
-			<url>http://nexus.parzival.space/repository/maven-snapshots/</url>
+			<url>https://nexus.parzival.space/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
